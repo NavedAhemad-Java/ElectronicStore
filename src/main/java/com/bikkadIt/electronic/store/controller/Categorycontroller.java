@@ -13,12 +13,16 @@ import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 
 @Slf4j
 @RestController
@@ -88,13 +92,24 @@ public class Categorycontroller {
     @PostMapping("/coverImage/{categoryId}")
     public ResponseEntity<ImageResponse>coverImage(
             @PathVariable Long categoryId ,@RequestParam("coverImage") MultipartFile coverImage1) throws IOException {
-
+        log.info("Initiating request for coverImage category with:{}",categoryId);
         String image = this.coverService.coverImage(coverImage1, coverImage);
         CategoryDto single = this.categoryService.getSingle(categoryId);
         single.setCoverImage(image);
         CategoryDto update = this.categoryService.update(single, categoryId);
         ImageResponse imageResponse = ImageResponse.builder().imageName(image).message("Image successfully upload").success(true).status(HttpStatus.OK).build();
+        log.info("Completed request for coverImage category with:{}",categoryId);
         return new ResponseEntity<>(imageResponse,HttpStatus.CREATED);
+    }
+
+    @GetMapping("/image/{userId}")
+    public void serverUserImage(@PathVariable Long categoryId, HttpServletResponse response) throws IOException {
+        CategoryDto category= this.categoryService.getSingle(categoryId);
+        log.info("category CoverImage name :{}",category.getCoverImage());
+        InputStream resource1 = this.coverService.getResource(coverImage, category.getCoverImage());
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(resource1,response.getOutputStream());
+
     }
 
 }
