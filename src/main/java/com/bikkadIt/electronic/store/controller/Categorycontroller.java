@@ -11,6 +11,7 @@ import com.bikkadIt.electronic.store.services.CoverService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
@@ -29,6 +30,9 @@ public class Categorycontroller {
 
     @Autowired
     private CoverService coverService;
+
+    @Value("${user.profile.image.path}")
+    private String coverImage;
 
 
     @PostMapping("/create")
@@ -81,15 +85,15 @@ public class Categorycontroller {
         return new ResponseEntity<>(single,HttpStatus.OK);
     }
 
-    @PostMapping("/coverimage/{categoryId}")
+    @PostMapping("/coverImage/{categoryId}")
     public ResponseEntity<ImageResponse>coverImage(
-            @PathVariable Long categoryId ,@RequestParam("categoryId") MultipartFile coverimage) throws IOException {
+            @PathVariable Long categoryId ,@RequestParam("coverImage") MultipartFile coverImage1) throws IOException {
 
-        this.coverService.coverImage(coverimage,categoryId);
-        UserDto user = this.userServices.getByUserId(userId);
-        user.setImage(imageName);
-        UserDto userDto = this.userServices.updateUser(user, userId);
-        ImageResponse imageResponse = ImageResponse.builder().imageName(imageName).message("Image successfully uplod").success(true).status(HttpStatus.OK).build();
+        String image = this.coverService.coverImage(coverImage1, coverImage);
+        CategoryDto single = this.categoryService.getSingle(categoryId);
+        single.setCoverImage(image);
+        CategoryDto update = this.categoryService.update(single, categoryId);
+        ImageResponse imageResponse = ImageResponse.builder().imageName(image).message("Image successfully upload").success(true).status(HttpStatus.OK).build();
         return new ResponseEntity<>(imageResponse,HttpStatus.CREATED);
     }
 
