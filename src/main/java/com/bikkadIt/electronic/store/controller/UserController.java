@@ -72,7 +72,7 @@ public class UserController {
 
     }
     //getAllUser
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<PagebaleResponse<UserDto>>getAllUser(@RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber
                                                     , @RequestParam(value="pageSize",defaultValue = "10",required = false)Integer pageSize,
                                                             @RequestParam(value="sortBy",defaultValue = "name",required = false)String sortBy,

@@ -2,6 +2,9 @@ package com.bikkadIt.electronic.store.services;
 
 import com.bikkadIt.electronic.store.dtos.CategoryDto;
 import com.bikkadIt.electronic.store.dtos.PagebaleResponse;
+import com.bikkadIt.electronic.store.dtos.UserDto;
+
+import java.util.List;
 
 public interface CategoryService {
 
@@ -22,4 +25,7 @@ public interface CategoryService {
     //get Single Category details
 
     CategoryDto getSingle(Long categoryId);
+
+
+    List<CategoryDto> serachCat(String keyword);
 }
