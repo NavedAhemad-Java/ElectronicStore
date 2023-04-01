@@ -92,7 +92,9 @@ public class Categorycontroller {
 
     @GetMapping("/searchCat/{keyword}")
     public ResponseEntity<List<CategoryDto>>searchCategory(@PathVariable String keyword){
+        log.info("Initiating request for Search category with:{}",keyword);
         List<CategoryDto> categoryDtos = this.categoryService.serachCat(keyword);
+        log.info("Completed  request for search category with:{}",keyword);
         return new ResponseEntity<>(categoryDtos,HttpStatus.OK);
     }
 
