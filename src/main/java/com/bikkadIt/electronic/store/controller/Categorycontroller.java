@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -87,6 +88,12 @@ public class Categorycontroller {
         CategoryDto single = this.categoryService.getSingle(categoryId);
         log.info("Completed request for get single category with:{}",categoryId);
         return new ResponseEntity<>(single,HttpStatus.OK);
+    }
+
+    @GetMapping("/searchCat/{keyword}")
+    public ResponseEntity<List<CategoryDto>>searchCategory(@PathVariable String keyword){
+        List<CategoryDto> categoryDtos = this.categoryService.serachCat(keyword);
+        return new ResponseEntity<>(categoryDtos,HttpStatus.OK);
     }
 
     @PostMapping("/coverImage/{categoryId}")
