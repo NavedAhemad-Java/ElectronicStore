@@ -3,14 +3,12 @@ package com.bikkadIt.electronic.store.services.impl;
 import com.bikkadIt.electronic.store.dtos.CategoryDto;
 import com.bikkadIt.electronic.store.dtos.PagebaleResponse;
 import com.bikkadIt.electronic.store.entities.Category;
-import com.bikkadIt.electronic.store.entities.User;
 import com.bikkadIt.electronic.store.exception.ResourceNotFoundException;
 import com.bikkadIt.electronic.store.helper.AppConstance;
 import com.bikkadIt.electronic.store.helper.Helper;
-import com.bikkadIt.electronic.store.respository.CategoryRespository;
+import com.bikkadIt.electronic.store.respository.CategoryRepository;
 import com.bikkadIt.electronic.store.services.CategoryService;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.description.annotation.AnnotationValue;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +24,7 @@ import java.util.stream.Collectors;
 public class CategoryImpl implements CategoryService {
 
     @Autowired
-   private CategoryRespository categoryRespository;
+   private CategoryRepository categoryRespository;
 
     @Autowired
    private ModelMapper modelMapper;
