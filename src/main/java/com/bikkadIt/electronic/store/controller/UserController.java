@@ -40,7 +40,13 @@ public class UserController {
     @Value("${user.profile.image.path}")
     private String imageUplodPath;
 
+    /**
+     *
+     * @param userDto
+     * @return
+     */
     //createUser
+
     @PostMapping
     public ResponseEntity<UserDto>createUser(@Valid @RequestBody UserDto userDto){
         logger.info("Initiating request for save user");
@@ -48,6 +54,13 @@ public class UserController {
         logger.info("Completed request for save user");
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
+
+    /**
+     *
+     * @param userDto
+     * @param userId
+     * @return
+     */
     //updateUser
     @PutMapping("/{userId}")
     public ResponseEntity<UserDto>updateUser(@Valid @RequestBody UserDto userDto, @PathVariable Long userId){
@@ -56,6 +69,12 @@ public class UserController {
         logger.info("Completed request for update user with:{}",userId);
         return new ResponseEntity<>(updateUser,HttpStatus.OK);
     }
+
+    /**
+     *
+     * @param userId
+     * @return
+     */
 
     //deleteUser
     @DeleteMapping("/{userId}")
@@ -71,6 +90,15 @@ public class UserController {
         return  new ResponseEntity<>(message,HttpStatus.OK);
 
     }
+
+    /**
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @param sortBy
+     * @param sortDir
+     * @return
+     */
     //getAllUser
     @GetMapping("/getAll")
     public ResponseEntity<PagebaleResponse<UserDto>>getAllUser(@RequestParam(value = "pageNumber",defaultValue = "0",required = false) Integer pageNumber
@@ -83,6 +111,12 @@ public class UserController {
 
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
+
     //SingleUser
     @GetMapping("/getId/{userId}")
     public ResponseEntity<UserDto>getUser(@PathVariable Long userId){
@@ -91,6 +125,12 @@ public class UserController {
         logger.info("Completed request for get single user with:{}",userId);
         return new ResponseEntity<>(userId1,HttpStatus.OK);
     }
+
+    /**
+     *
+     * @param email
+     * @return
+     */
 
     //getByEmail
 
@@ -102,6 +142,12 @@ public class UserController {
         return new ResponseEntity<>(getEmail,HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param keyword
+     * @return
+     */
+
     //searachUser
     @GetMapping("/serach/{keyword}")
     public ResponseEntity<List<UserDto>>serachUser(@PathVariable String keyword){
@@ -111,6 +157,14 @@ public class UserController {
         return new ResponseEntity<>(userDtos,HttpStatus.OK);
 
     }
+
+    /**
+     *
+     * @param userId
+     * @param image
+     * @return
+     * @throws IOException
+     */
 
     //upload user image
     @PostMapping("/image/{userId}")
@@ -124,6 +178,13 @@ public class UserController {
         ImageResponse imageResponse = ImageResponse.builder().imageName(imageName).message("Image successfully uplod").success(true).status(HttpStatus.OK).build();
         return new ResponseEntity<>(imageResponse,HttpStatus.CREATED);
     }
+
+    /**
+     *
+     * @param userId
+     * @param response
+     * @throws IOException
+     */
 
     @GetMapping("/image/{userId}")
     public void serverUserImage(@PathVariable Long userId, HttpServletResponse response) throws IOException {
