@@ -39,7 +39,11 @@ public class Categorycontroller {
     @Value("${user.profile.image.path}")
     private String coverImage;
 
-
+    /**
+     *
+     * @param categoryDto
+     * @return
+     */
     @PostMapping("/create")
     public ResponseEntity<CategoryDto>createCat(@RequestBody CategoryDto categoryDto){
         log.info("Initiating request for save category");
@@ -49,6 +53,13 @@ public class Categorycontroller {
 
     }
 
+    /**
+     *
+     * @param categoryDto
+     * @param categoryId
+     * @return
+     */
+
     @PutMapping("/update/{categoryId}")
     public ResponseEntity<CategoryDto>updateCat(@RequestBody CategoryDto categoryDto, @PathVariable Long categoryId){
         log.info("Initiating request for update user with:{}",categoryId);
@@ -57,6 +68,12 @@ public class Categorycontroller {
         return new ResponseEntity<>(update,HttpStatus.OK);
 
     }
+
+    /**
+     *
+     * @param categoryId
+     * @return
+     */
     @DeleteMapping("/delete/{categoryId}")
     public ResponseEntity<ApiUserResponse>getId(@PathVariable Long categoryId){
         log.info("Initiating request for deleted user with:{}",categoryId);
@@ -70,6 +87,15 @@ public class Categorycontroller {
         return new ResponseEntity<>(apiUserResponse,HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @param sortBy
+     * @param sortDir
+     * @return
+     */
+
     @GetMapping("/getAll")
     public ResponseEntity<PagebaleResponse>getAll(
             @RequestParam(value ="pageNumber",defaultValue = "0",required = false)Integer pageNumber,
@@ -82,6 +108,12 @@ public class Categorycontroller {
 
     }
 
+    /**
+     *
+     * @param categoryId
+     * @return
+     */
+
     @GetMapping("/getSingle/{categoryId}")
     public ResponseEntity<CategoryDto>singleCat(@PathVariable Long categoryId){
         log.info("Initiating request for get single category with:{}",categoryId);
@@ -90,6 +122,12 @@ public class Categorycontroller {
         return new ResponseEntity<>(single,HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param keyword
+     * @return
+     */
+
     @GetMapping("/searchCat/{keyword}")
     public ResponseEntity<List<CategoryDto>>searchCategory(@PathVariable String keyword){
         log.info("Initiating request for Search category with:{}",keyword);
@@ -97,6 +135,14 @@ public class Categorycontroller {
         log.info("Completed  request for search category with:{}",keyword);
         return new ResponseEntity<>(categoryDtos,HttpStatus.OK);
     }
+
+    /**
+     *
+     * @param categoryId
+     * @param coverImage1
+     * @return
+     * @throws IOException
+     */
 
     @PostMapping("/coverImage/{categoryId}")
     public ResponseEntity<ImageResponse>coverImage(
@@ -110,6 +156,13 @@ public class Categorycontroller {
         log.info("Completed request for coverImage category with:{}",categoryId);
         return new ResponseEntity<>(imageResponse,HttpStatus.CREATED);
     }
+
+    /**
+     *
+     * @param categoryId
+     * @param response
+     * @throws IOException
+     */
 
     @GetMapping("/image/{userId}")
     public void serverUserImage(@PathVariable Long categoryId, HttpServletResponse response) throws IOException {
