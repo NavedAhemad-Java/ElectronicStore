@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 
 public class CategoryDto extends BaseDtoClass {
     private Long categoryId;
