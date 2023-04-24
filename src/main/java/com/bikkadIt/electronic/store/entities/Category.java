@@ -1,16 +1,17 @@
 package com.bikkadIt.electronic.store.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.w3c.dom.stylesheets.LinkStyle;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name="categories")
 public class Category  extends BaseEntity{
@@ -23,6 +24,10 @@ public class Category  extends BaseEntity{
         private String description;
         private String coverImage;
         //other attributes if you have......
+
+        @OneToMany(mappedBy = "category",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+        private List<Product> products= new ArrayList<>();
+
 
 
 }
