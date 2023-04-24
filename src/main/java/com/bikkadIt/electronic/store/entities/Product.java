@@ -1,9 +1,6 @@
 package com.bikkadIt.electronic.store.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,6 +9,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name="products")
 public class Product extends BaseEntity {
 
@@ -27,5 +25,11 @@ public class Product extends BaseEntity {
     private Date addedDate;
     private boolean live;
     private boolean stock;
+
+    private String productImage;
+
+   @ManyToOne(fetch =FetchType.EAGER )
+   @JoinColumn(name="category_Id")
+   private Category category;
 
 }
