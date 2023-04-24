@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class CategoryImpl implements CategoryService {
 
     @Autowired
-   private CategoryRepository categoryRespository;
+   private CategoryRepository categoryRepository;
 
     @Autowired
    private ModelMapper modelMapper;
@@ -41,7 +41,7 @@ public class CategoryImpl implements CategoryService {
         Category category = this.modelMapper.map(categoryDto, Category.class);
         log.info("Initiating dao call for the save the category Details");
         category.setIsactive(AppConstance.YES);
-        Category save = this.categoryRespository.save(category);
+        Category save = this.categoryRepository.save(category);
         log.info("Completed dao call for the save the category Details");
         return this.modelMapper.map(save,CategoryDto.class);
     }
@@ -56,11 +56,11 @@ public class CategoryImpl implements CategoryService {
     @Override
     public CategoryDto update(CategoryDto categoryDto, Long categoryId) {
         log.info("Initiating dao call for update category details with:{}", categoryId);
-        Category category = this.categoryRespository.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("Category", "categoryId", categoryId));
+        Category category = this.categoryRepository.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("Category", "categoryId", categoryId));
         category.setTitle(categoryDto.getTitle());
         category.setDescription(categoryDto.getDescription());
         category.setCoverImage(category.getCoverImage());
-        Category save = this.categoryRespository.save(category);
+        Category save = this.categoryRepository.save(category);
        log.info("Complete dao call for update  category details: {}", categoryId);
         return this.modelMapper.map(save,CategoryDto.class);
     }
@@ -73,10 +73,10 @@ public class CategoryImpl implements CategoryService {
     @Override
     public void delete(Long categoryId) {
         log.info("Initiating dao call for deleted category with:{}",categoryId);
-        Category category = this.categoryRespository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+        Category category = this.categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
         category.setIsactive(AppConstance.YES);
         log.info("Completed dao call for deleted category with:{}",categoryId);
-        this.categoryRespository.delete(category);
+        this.categoryRepository.delete(category);
     }
 
     /**
@@ -93,7 +93,7 @@ public class CategoryImpl implements CategoryService {
         log.info("Initiating dao call for getAllCat  details ");
         Sort sort =sortDir.equalsIgnoreCase("desc")? Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
         Pageable page= PageRequest.of(pageNumber,pageSize,sort);
-        Page<Category> list = this.categoryRespository.findAll(page);
+        Page<Category> list = this.categoryRepository.findAll(page);
         PagebaleResponse<CategoryDto> response = Helper.getPageableResponse(list, CategoryDto.class);
         log.info("Completed dao call for getAllCat  details ");
         return response;
@@ -108,7 +108,7 @@ public class CategoryImpl implements CategoryService {
     @Override
     public CategoryDto getSingle(Long categoryId) {
         log.info("Initiating dao call for getSingle category details with:{}",categoryId);
-        Category category = this.categoryRespository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+        Category category = this.categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
         CategoryDto getSingl = this.modelMapper.map(category, CategoryDto.class);
         getSingl.setIsactive(AppConstance.YES);
         log.info("Complete dao call for getSingle category details with:{}",categoryId);
@@ -123,7 +123,7 @@ public class CategoryImpl implements CategoryService {
     @Override
     public List<CategoryDto> serachCat(String keyword) {
         log.info("Initiating dao call for serach category details with:{}",keyword);
-        List<Category> list = this.categoryRespository.findByTitleContaining(keyword);
+        List<Category> list = this.categoryRepository.findByTitleContaining(keyword);
         log.info("Completed dao call for search category details with:{}",keyword);
         List<CategoryDto> collect = list.stream().map((list1) -> this.modelMapper.map(list1, CategoryDto.class)).collect(Collectors.toList());
         return collect;
