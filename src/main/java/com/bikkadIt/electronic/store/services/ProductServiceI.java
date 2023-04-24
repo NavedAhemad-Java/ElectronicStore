@@ -33,5 +33,12 @@ public interface ProductServiceI {
     PagebaleResponse<ProductDto>searchByTitle(String subTitle,Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
 
 
+   //create produt wit category
 
+    ProductDto createWithCategory(ProductDto productDto,Long categoryId);
+
+    ProductDto updateCateogry(Long productId,Long categoryId);
+
+
+    PagebaleResponse<ProductDto>getAllOfCategory(Long categoryId,Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
 }
