@@ -1,9 +1,7 @@
 package com.bikkadIt.electronic.store.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.bikkadIt.electronic.store.entities.Category;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -12,6 +10,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ProductDto  extends BaseDtoClass{
 
     private Long productId;
@@ -23,4 +22,6 @@ public class ProductDto  extends BaseDtoClass{
     private Date addedDate;
     private boolean live;
     private boolean stock;
+    private String productImage;
+    private CategoryDto category;
 }
