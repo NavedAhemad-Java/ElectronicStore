@@ -3,9 +3,12 @@ package com.bikkadIt.electronic.store.controller;
 import com.bikkadIt.electronic.store.BaseTestController;
 import com.bikkadIt.electronic.store.dtos.CategoryDto;
 import com.bikkadIt.electronic.store.dtos.PagebaleResponse;
+import com.bikkadIt.electronic.store.dtos.ProductDto;
 import com.bikkadIt.electronic.store.entities.Category;
+import com.bikkadIt.electronic.store.entities.Product;
 import com.bikkadIt.electronic.store.respository.CategoryRepository;
 import com.bikkadIt.electronic.store.services.CategoryService;
+import com.bikkadIt.electronic.store.services.ProductServiceI;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,13 +38,30 @@ class CategorycontrollerTest extends BaseTestController {
     private ModelMapper mapper;
     @Autowired
     private MockMvc mockMvc;
+    @MockBean
+    private ProductServiceI productServiceI;
 
     Category category = Category.builder()
             .title("Electronic category")
             .description("selection for electronic itam")
             .coverImage("adf.png")
             .build();
-
+    Product product = Product.builder().title("LCD TV").description("realme 36 cm and sound bast quality").price(23645.25)
+            .quantity(1)
+            .discountPrice(5.00)
+            .stock(true)
+            .live(true).build();
+    public void init1() {
+        product = Product.builder()
+                .title("LCD TV")
+                .description("realme 36 cm and sound bast quality")
+                .price(23645.25)
+                .quantity(1)
+                .discountPrice(5.00)
+                .stock(true)
+                .live(true)
+                .build();
+    }
     @BeforeEach
     public void init(){
         category = Category.builder()
@@ -179,5 +200,93 @@ class CategorycontrollerTest extends BaseTestController {
 
     @Test
     void serverUserImage() {
+    }
+
+    @Test
+    void createProductWithCategory() throws Exception {
+        Long categoryId=1L;
+        CategoryDto dto = mapper.map(category, CategoryDto.class);
+        ProductDto productDto = mapper.map(product, ProductDto.class);
+        Mockito.when(productServiceI.createWithCategory(Mockito.any(),Mockito.anyLong())).thenReturn(productDto);
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/cat/{categoryId}/products",categoryId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(convertObjectToJsonString(category))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.title").exists());
+    }
+
+
+    @Test
+    void updateCategoryWithProduct() throws Exception {
+        Long categoryId=1L;
+        Long productId=1L;
+        CategoryDto dto = this.mapper.map(category, CategoryDto.class);
+        ProductDto productDto = mapper.map(product, ProductDto.class);
+
+        Mockito.when(productServiceI.updateCateogry(Mockito.anyLong(),Mockito.anyLong())).thenReturn(productDto);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/cat/{categoryId}/products/{productId}",categoryId,productId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(convertObjectToJsonString(category))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").exists());
+
+    }
+
+    @Test
+    void testUpdateCategoryWithProduct() throws Exception {
+        Long categoryId=1L;
+        ProductDto pro = ProductDto.builder().title("LCD TV")
+                .description("realme 36 cm and sound bast quality")
+                .price(23645.25)
+                .quantity(1)
+                .discountPrice(5.00)
+                .stock(true)
+                .live(true)
+                .build();
+
+        ProductDto pro1 = ProductDto.builder().title("LCD TV")
+                .description("realme 36 cm and sound bast quality")
+                .price(23645.25)
+                .quantity(1)
+                .discountPrice(5.00)
+                .stock(true)
+                .live(true)
+                .build();
+
+        ProductDto pro2 = ProductDto.builder().title("LCD TV")
+                .description("realme 36 cm and sound bast quality")
+                .price(23645.25)
+                .quantity(1)
+                .discountPrice(5.00)
+                .stock(true)
+                .live(true)
+                .build();
+
+        ProductDto pro3 = ProductDto.builder().title("LCD TV")
+                .description("realme 36 cm and sound bast quality")
+                .price(23645.25)
+                .quantity(1)
+                .discountPrice(5.00)
+                .stock(true)
+                .live(true)
+                .build();
+        PagebaleResponse<ProductDto> pegeableResponse=new PagebaleResponse<>();
+        pegeableResponse.setContent(Arrays.asList(pro,pro1,pro2,pro3));
+        pegeableResponse.setLastpage(false);
+        pegeableResponse.setPageSize(10);
+        pegeableResponse.setPageNumber(100);
+        pegeableResponse.setTotalElements(1000);
+        Mockito.when(productServiceI.getAllOfCategory(Mockito.anyLong(),Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString())).thenReturn(pegeableResponse);
+
+        this.mockMvc.perform(get("/cat/{categoryId}/products",categoryId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }
